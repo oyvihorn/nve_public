@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: db-populate-cron
+spec:
+  schedule: "0 1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          - name: db-storage
+            persistentVolumeClaim:
+              claimName: db-storage-claim
+          containers:
+          - name: db-populate
+            imagePullPolicy: "IfNotPresent"
+            image: db-cron
+            volumeMounts:
+            - name: db-storage
+              mountPath: /app/db
+          restartPolicy: OnFailure

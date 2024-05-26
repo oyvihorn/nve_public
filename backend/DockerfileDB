@@ -1,0 +1,12 @@
+FROM python:3.10-slim
+WORKDIR /app
+
+# set env variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+COPY ./requirements.txt /app/requirements.txt
+COPY ./models.py ./services.py ./schemas.py ./database.py ./populate_db.py /app/
+
+RUN pip install -r /app/requirements.txt
+CMD ["python", "populate_db.py"]

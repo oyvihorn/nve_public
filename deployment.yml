@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapiback
+  labels:
+    app: fastapiback
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapiback
+  template:
+    metadata:
+      labels:
+        app: fastapiback
+    spec:
+      containers:
+      - name: fastapiback
+        imagePullPolicy: "IfNotPresent"
+        image: fastbackimage
+        ports:
+        - containerPort: 8000
+        env:
+          - name: API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: api-key-secret
+                key: apiKey
+          # - name: REDIS_HOST
+          #   value: redis
+          # - name: REDIS_PORT
+          #   value: "6379"
+        volumeMounts:
+        - name: db-storage
+          mountPath: /code/db
+      volumes:
+      - name: db-storage
+        persistentVolumeClaim:
+          claimName: db-storage-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapibackentry
+  namespace: default
+spec:
+#  type: NodePort
+#  type: LoadBalancer
+#  type: ClusterIP
+  selector:
+    app: fastapiback
+  ports:
+  - port: 8000
+    targetPort: 8000
+#    nodePort: 30001
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nve-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nve-app
+  template:
+    metadata:
+      labels:
+        app: nve-app
+    spec:
+      containers:
+        - name: nve-front
+          image: nve-front
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 3000
+      restartPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nve-service
+spec:
+  type: NodePort
+#  type: LoadBalancer
+#  type: ClusterIP
+  selector:
+    app: nve-app
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 32000

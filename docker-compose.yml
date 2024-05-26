@@ -1,0 +1,14 @@
+version: '3'
+services:
+  fastapiback:
+    image: fastbackimage
+    ports:
+      - 8000:8000
+    volumes:
+      - ./db:/db
+  nve-app:
+    image: nve-front
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_API_URL=http://fastapibackentry:8000
