@@ -1,12 +1,11 @@
 DESCRIPTION:
-Display timeseries for selected stations and parameters for nve maalestasjoner graphically.
+Display statistics for selected stations and parameters for nve maalestasjoner graphically.
+A parameter might be vannstand, vannføring, vanntemperatur.
 
 DETAILS:
-Populate database with stations and parameters
-This part will be in a cron job that updates stations and parameter db daily.
-Not to be run for every app instance. Only observations needs to be pulled from api every time.
-Stations and parameters are fetched from db for every select in front end pull down menus as it
-needs to filter parameters based on stations selected and vice versa.
+Populate database with stations and parameters.
+This part will be in a cron job that updates the stations and parameter database daily.
+The observations/timeseries will be pulled from the nve API for every request based on the stations and parameter selected in the frontend. The app supports different plots. Timeseries for a station and all of its parameters. Compare 2 station and 1 parameter. Create jointplot to see how two parameters relate to each other. Or matrix plot to see how all parameters for 1 station relate to each other.
 
 OPERATIONS:
 For development we are running a docker-compose container with both front and backend pointing to 
