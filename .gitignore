@@ -1,0 +1,12 @@
+*.db
+*copy*
+list/
+.DS_Store
+.env
+python-nve/
+backend/__pycache__/
+.DS_Store
+.env
+app.env
+.vscode/settings.json
+secrets.yml
